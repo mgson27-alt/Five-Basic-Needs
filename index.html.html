@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>윌리엄 글라써의 5가지 기본욕구 강도 검사</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- html2pdf.js for Client-side PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: white;
+            }
+            .print-shadow-none {
+                box-shadow: none !important;
+                border: 1px solid #e2e8f0;
+            }
+            .page-break-before {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm no-print">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="restartTest()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid fa-brain text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-800 text-lg leading-tight">5가지 기본욕구 검사</h1>
+                    <p class="text-xs text-slate-500">William Glasser's Basic Needs Test</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <div id="headerProgress" class="hidden items-center space-x-3">
+                    <span id="headerProgressText" class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">0 / 100</span>
+                    <button onclick="restartTest()" class="text-slate-400 hover:text-slate-600 text-sm p-1" title="처음으로">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 md:p-6">
+        
+        <!-- STEP 1: START & USER INFO SCREEN -->
+        <section id="startScreen" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-10 max-w-2xl mx-auto my-6">
+            <div class="text-center mb-8">
+                <span class="px-3 py-1 bg-indigo-50 text-indigo-600 font-semibold text-xs rounded-full border border-indigo-100 inline-block mb-3">일반인용 검사지</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-3">욕구강도 검사지</h2>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    윌리엄 글라써(William Glasser)의 선택이론에 기초한 5가지 기본욕구<br class="hidden sm:inline">
+                    (생존, 사랑과 소속, 힘, 자유, 즐거움)를 측정하여 나의 성향을 분석합니다.
+                </p>
+            </div>
+
+            <!-- Need Cards Overview -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-8">
+                <div class="p-3 rounded-xl bg-red-50 border border-red-100 text-center">
+                    <div class="w-8 h-8 mx-auto rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-1 text-sm">
+                        <i class="fa-solid fa-house"></i>
+                    </div>
+                    <div class="text-xs font-bold text-slate-700">생존과 안정</div>
+                </div>
+                <div class="p-3 rounded-xl bg-rose-50 border border-rose-100 text-center">
+                    <div class="w-8 h-8 mx-auto rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mb-1 text-sm">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="text-xs font-bold text-slate-700">사랑과 소속</div>
+                </div>
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-100 text-center">
+                    <div class="w-8 h-8 mx-auto rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mb-1 text-sm">
+                        <i class="fa-solid fa-hand-fist"></i>
+                    </div>
+                    <div class="text-xs font-bold text-slate-700">힘의 욕구</div>
+                </div>
+                <div class="p-3 rounded-xl bg-sky-50 border border-sky-100 text-center">
+                    <div class="w-8 h-8 mx-auto rounded-full bg-sky-100 text-sky-600 flex items-center justify-center mb-1 text-sm">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <div class="text-xs font-bold text-slate-700">자유의 욕구</div>
+                </div>
+                <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-center col-span-2 sm:col-span-1">
+                    <div class="w-8 h-8 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-1 text-sm">
+                        <i class="fa-solid fa-face-smile"></i>
+                    </div>
+                    <div class="text-xs font-bold text-slate-700">즐거움의 욕구</div>
+                </div>
+            </div>
+
+            <!-- Form input -->
+            <form id="userInfoForm" onsubmit="startTest(event)" class="space-y-4 max-w-md mx-auto">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">이름 <span class="text-red-500">*</span></label>
+                    <input type="text" id="userName" required placeholder="이름을 입력하세요" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">성별</label>
+                        <select id="userGender" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                            <option value="남">남성</option>
+                            <option value="여">여성</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">나이</label>
+                        <input type="number" id="userAge" inputmode="numeric" pattern="[0-9]*" placeholder="예: 25" min="1" max="120" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 text-xs text-slate-500 space-y-1">
+                    <p class="font-medium text-slate-700"><i class="fa-solid fa-circle-info text-indigo-500 mr-1"></i> 검사 안내</p>
+                    <p>• 총 100문항이며, 소요시간은 약 10~15분입니다.</p>
+                    <p>• 정답이 없으니 정직하고 직관적으로 답변해주세요.</p>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold shadow-md shadow-indigo-100 transition duration-200 text-base">
+                    검사 시작하기 <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </form>
+        </section>
+
+        <!-- STEP 2: TEST ASSESSMENT SCREEN -->
+        <section id="testScreen" class="hidden space-y-6 max-w-3xl mx-auto">
+            <!-- Progress Bar -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 sticky top-16 z-20">
+                <div class="flex justify-between items-center text-xs font-semibold text-slate-600 mb-2">
+                    <span>진행률 (<span id="currentPageText">1</span>/10 페이지)</span>
+                    <span id="progressPercent" class="text-indigo-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-purple-600 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Page Scale Rating Guidance -->
+            <div class="bg-indigo-50/80 border border-indigo-100 p-3 rounded-xl text-center text-xs text-indigo-900 font-medium">
+                각 문항을 읽고 자신에게 가장 잘 해당하는 점수를 선택해주세요.<br class="sm:hidden">
+                <span class="text-indigo-600 font-bold ml-1">(5점: 항상 그렇다 ~ 1점: 전혀 그렇지 않다)</span>
+            </div>
+
+            <!-- Questions Container -->
+            <div id="questionsContainer" class="space-y-4">
+                <!-- Dynamically Inserted Question Cards -->
+            </div>
+
+            <!-- Pagination Control Buttons -->
+            <div class="flex items-center justify-between pt-4">
+                <button id="prevBtn" onclick="changePage(-1)" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-medium text-sm hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-2">
+                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                    <span>이전</span>
+                </button>
+                <span id="pageIndicator" class="text-xs font-medium text-slate-500">
+                    1 - 10 / 100
+                </span>
+                <button id="nextBtn" onclick="changePage(1)" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm shadow-sm flex items-center space-x-2">
+                    <span>다음</span>
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 3: RESULT REPORT SCREEN -->
+        <section id="resultScreen" class="hidden space-y-8 max-w-4xl mx-auto">
+            
+            <!-- Result Top Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 relative overflow-hidden print-shadow-none">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 via-amber-500 via-emerald-500 via-sky-500 to-indigo-500"></div>
+                
+                <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-6 mb-6 gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2 text-indigo-600 font-bold text-sm mb-1">
+                            <i class="fa-solid fa-square-poll-vertical"></i>
+                            <span>욕구강도 결과 분석 리포트</span>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-800"><span id="resUserName" class="text-indigo-600">사용자</span> 님의 5가지 기본욕구 결과</h2>
+                        <p class="text-xs text-slate-500 mt-1">
+                            검사일: <span id="resDate">2026-08-18</span> | 
+                            성별: <span id="resGender">남</span> | 
+                            나이: <span id="resAge">25</span>세
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Score Summary Cards -->
+                <div class="mb-8">
+                    <h3 class="text-sm font-bold text-slate-700 mb-3 flex items-center">
+                        <i class="fa-solid fa-list-ol mr-2 text-indigo-500"></i>1. 욕구강도 점수 결과 및 순위
+                    </h3>
+                    <div id="scoreSummaryCards" class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <!-- Score Cards Injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-700 mb-3 flex items-center">
+                            <i class="fa-solid fa-chart-column mr-2 text-indigo-500"></i>막대 그래프 프로필
+                        </h3>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 h-64 flex items-center justify-center">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-700 mb-3 flex items-center">
+                            <i class="fa-solid fa-chart-pie mr-2 text-indigo-500"></i>욕구 균형 레이더 차트
+                        </h3>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 h-64 flex items-center justify-center">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Level General Analysis -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 print-shadow-none">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                    <i class="fa-solid fa-magnifying-glass-chart text-indigo-600 mr-2"></i>2. 종합 점수 결과 해석
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1 text-indigo-600">모든 욕구가 높은 경우 (71점 이상 다수)</div>
+                        <p class="text-slate-600 leading-relaxed">
+                            에너지가 많고, 상황에 따라 다양한 욕구를 사용합니다. 내면이 성숙하면 다른 사람보다 일과 관계를 잘 풀어가지만, 내면이 그렇지 않은 경우 좌충우돌할 수 있습니다.
+                        </p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1 text-slate-600">모든 욕구가 낮거나 중간인 경우</div>
+                        <p class="text-slate-600 leading-relaxed">
+                            무기력하게 보일 수 있으며 이것이 우울함으로 인한 것인지 확인해 볼 필요가 있습니다. 욕구는 선천적인 특성이므로 있는 그대로 인정하고 수용하는 태도가 필요합니다.
+                        </p>
+                    </div>
+                    <div id="dominantAnalysisCard" class="p-4 rounded-xl bg-indigo-50 border border-indigo-100 md:col-span-2">
+                        <div class="font-bold text-indigo-900 text-sm mb-1">
+                            <i class="fa-solid fa-star mr-1 text-amber-500"></i><span id="dominantTypeName">주요 욕구</span>의 복합적 특성
+                        </div>
+                        <p id="dominantTypeDesc" class="text-slate-700 leading-relaxed">
+                            loading...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Need Profile Analysis -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 print-shadow-none">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center">
+                        <i class="fa-solid fa-book-open text-indigo-600 mr-2"></i>3. 욕구 유형별 상세 분석지
+                    </h3>
+                    <span class="text-xs text-slate-400">윌리엄 글라써 욕구이론 기반</span>
+                </div>
+
+                <div id="detailedAnalysisContainer" class="space-y-6">
+                    <!-- Dynamic Need Analysis Accordions / Cards -->
+                </div>
+            </div>
+
+            <!-- Need Diagram Reference -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 print-shadow-none">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                    <i class="fa-solid fa-shapes text-indigo-600 mr-2"></i>4. 5가지 기본욕구 핵심 개념 및 특성
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                    <div class="p-3.5 rounded-xl border border-red-200 bg-red-50/50">
+                        <div class="font-bold text-red-700 text-sm mb-1 flex items-center">
+                            <i class="fa-solid fa-house mr-1.5"></i>생존과 안정
+                        </div>
+                        <div class="text-red-900 font-semibold mb-1">"계획하고 실천하라!"</div>
+                        <p class="text-slate-600 leading-normal">
+                            원칙, 상식, 규칙, 조심성, 섬세, 완벽, 책임감, 예측, 확인, 정리, 안전, 건강, 꼼꼼, 계획, 성실
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl border border-rose-200 bg-rose-50/50">
+                        <div class="font-bold text-rose-700 text-sm mb-1 flex items-center">
+                            <i class="fa-solid fa-heart mr-1.5"></i>사랑과 소속
+                        </div>
+                        <div class="text-rose-900 font-semibold mb-1">"함께해요! 고마워요!"</div>
+                        <p class="text-slate-600 leading-normal">
+                            친밀, 사람에 대한 관심, 함께, 공유, 섬김, 도움, 나눔, 이타적, 공감, 친절, 배려, 양보, 동질, 자책, 연결
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl border border-amber-200 bg-amber-50/50">
+                        <div class="font-bold text-amber-700 text-sm mb-1 flex items-center">
+                            <i class="fa-solid fa-hand-fist mr-1.5"></i>힘의 욕구
+                        </div>
+                        <div class="text-amber-900 font-semibold mb-1">"센터본능! 나를 따르라!"</div>
+                        <p class="text-slate-600 leading-normal">
+                            성취, 독점, 인정, 성공, 자기표현, 승부욕, 자신감, 당당함, 리더십, 제안, 지시, 직설, 지적
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl border border-sky-200 bg-sky-50/50">
+                        <div class="font-bold text-sky-700 text-sm mb-1 flex items-center">
+                            <i class="fa-solid fa-paper-plane mr-1.5"></i>자유의 욕구
+                        </div>
+                        <div class="text-sky-900 font-semibold mb-1">"나만의 길! 나만의 철학!"</div>
+                        <p class="text-slate-600 leading-normal">
+                            적절한 거리, 혼자만의 시간, 변화, 자율, 틀에서 벗어남, 의문제기, 다르게 생각함, 구속 싫음, 창의성
+                        </p>
+                    </div>
+                    <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/50 sm:col-span-2 md:col-span-1">
+                        <div class="font-bold text-emerald-700 text-sm mb-1 flex items-center">
+                            <i class="fa-solid fa-face-smile mr-1.5"></i>즐거움의 욕구
+                        </div>
+                        <div class="text-emerald-900 font-semibold mb-1">"즐거움엔 끝이 없다!"</div>
+                        <p class="text-slate-600 leading-normal">
+                            재미, 호기심, 관찰, 탐험, 도전, 놀이, 게임, 웃음, 흥, 유머, 장난, 독서, 취미, 배움, 가르침, 리액션, 몰입
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 no-print">
+                <button onclick="downloadAndUploadPDF()" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl text-sm font-semibold flex items-center justify-center space-x-2 shadow-md transition">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>결과지 업로드</span>
+                </button>
+                <button onclick="restartTest()" class="w-full sm:w-auto px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold flex items-center justify-center space-x-2 transition">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>다시 검사</span>
+                </button>
+            </div>
+
+            <!-- Print Footer Information -->
+            <div class="text-center text-xs text-slate-400 py-4 no-print">
+                본 검사 결과는 윌리엄 글라써의 욕구이론에 기반한 것으로 자신을 이해하는 자료로 활용하시기 바랍니다.
+            </div>
+        </section>
+
+        <!-- Google Drive Direct Upload Complete Modal -->
+        <div id="driveModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl text-center space-y-4">
+                <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl">
+                    <i class="fa-solid fa-cloud-check"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">결과지 저장 완료</h3>
+                    <p class="text-xs text-slate-500 mt-1">
+                        파일명: <span id="modalFileName" class="font-semibold text-indigo-600">홍길동_기본욕구강도_검사결과.pdf</span>
+                    </p>
+                </div>
+                
+                <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-100 text-left text-xs text-emerald-950 space-y-1">
+                    <p class="font-bold text-emerald-800"><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> PDF 저장 성공</p>
+                    <p>PDF 결과지가 기기에 정상 저장되었습니다. 아래 '구글 드라이브 폴더 열기' 버튼을 클릭하여 드라이브로 이동 후 업로드해 주세요.</p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2 pt-2">
+                    <a id="driveFileLink" href="https://drive.google.com/drive/folders/1iTfA-MwaKFP_l2T-8soFr8X7p7xQFvrE?usp=sharing" target="_blank" rel="noopener noreferrer" onclick="closeDriveModal()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center justify-center space-x-2">
+                        <i class="fa-brands fa-google-drive"></i>
+                        <span>구글 드라이브 폴더 열기</span>
+                    </a>
+                    <button onclick="closeDriveModal()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition">
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF Loading Overlay -->
+        <div id="pdfLoading" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center">
+            <div class="bg-white rounded-2xl p-6 shadow-xl flex flex-col items-center space-y-3">
+                <i class="fa-solid fa-spinner fa-spin text-indigo-600 text-3xl"></i>
+                <div class="text-center">
+                    <span id="loadingStatusText" class="text-sm font-semibold text-slate-800 block">PDF 결과지를 생성 중입니다...</span>
+                    <span id="loadingSubText" class="text-xs text-slate-500">잠시만 기다려 주세요.</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-4 mt-8 no-print">
+        <div class="max-w-5xl mx-auto px-4 text-center text-xs text-slate-500">
+            © 2026 5가지 기본욕구 강도 검사 프로그램 • 글라써 욕구이론 기반
+        </div>
+    </footer>
+
+    <script>
+        // Target Google Drive Folder URL
+        const TARGET_DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1iTfA-MwaKFP_l2T-8soFr8X7p7xQFvrE?usp=sharing";
+
+        // Application State
+        let userInfo = { name: '', gender: '남', age: '' };
+        let userAnswers = {}; 
+        let currentPage = 0; 
+        const PAGE_SIZE = 10;
+        let barChartInstance = null;
+        let radarChartInstance = null;
+
+        /*
+         * Question Data Matrix (100 Questions)
+         */
+        const questionsData = [
+            { id: 1, text: "내가 한 일에 대해 인정받고 싶다.", cat: "C" },
+            { id: 2, text: "돈이나 물건을 아껴 쓴다.", cat: "A" },
+            { id: 3, text: "큰 소리를 내며 웃는다.", cat: "E" },
+            { id: 4, text: "다른 사람이 나에게 지시하는 것을 싫어한다.", cat: "D" },
+            { id: 5, text: "조언을 잘한다.", cat: "C" },
+            { id: 6, text: "계획을 짜야 마음이 편안하다.", cat: "A" },
+            { id: 7, text: "유머를 사용하거나 듣는 것이 즐겁다.", cat: "E" },
+            { id: 8, text: "모임 후 설거지 등 뒷정리를 자발적으로 한다.", cat: "B" },
+            { id: 9, text: "나를 구속하려는 느낌이 들면 거리를 두게 된다.", cat: "D" },
+            { id: 10, text: "균형잡힌 식생활을 하려고 노력한다.", cat: "A" },
+            { id: 11, text: "새로운 것을 탐험하거나 관찰하기를 좋아한다.", cat: "E" },
+            { id: 12, text: "다른 사람을 위한 일에 기꺼이 시간을 낸다.", cat: "B" },
+            { id: 13, text: "새로운 방식으로 일하거나 생각하는 것이 즐겁다.", cat: "E" },
+            { id: 14, text: "다른 사람에게 무언가를 시키는 것이 어렵지 않다.", cat: "C" },
+            { id: 15, text: "아무리 옳은 말이라 할지라도 반복해서 말하지 않는다.", cat: "D" },
+            { id: 16, text: "상식이나 규범에서 벗어나지 않으려고 노력한다.", cat: "A" },
+            { id: 17, text: "옳다고 생각되는 일에는 강하게 이야기하고 이루어 낸다.", cat: "C" },
+            { id: 18, text: "사람에 대한 관심이 많다.", cat: "B" },
+            { id: 19, text: "무엇을 하든 즐기는 것이 중요하다.", cat: "E" },
+            { id: 20, text: "정해진 규칙이라도 꼭 지켜야만 하는 것은 아니라고 생각한다.", cat: "D" },
+            { id: 21, text: "사람들과 함께 있는 것을 좋아한다.", cat: "B" },
+            { id: 22, text: "청소나 정리가 되어 있어야 마음이 편하다.", cat: "A" },
+            { id: 23, text: "내가 있는 곳에서 리더 역할을 한다.", cat: "C" },
+            { id: 24, text: "배려하거나 양보하여야 마음이 편하다.", cat: "B" },
+            { id: 25, text: "내 생각과 달라도 그럴 수 있다고 생각한다.", cat: "D" },
+            { id: 26, text: "외모를 단정하게 가꾸는데 관심이 많다.", cat: "A" },
+            { id: 27, text: "흥이 솟구칠 때가 있다.", cat: "E" },
+            { id: 28, text: "무슨 일이든 함께 하는 것이 좋다.", cat: "B" },
+            { id: 29, text: "꼼꼼하고 섬세하다.", cat: "A" },
+            { id: 30, text: "여행을 많이 다닌다.", cat: "E" },
+            { id: 31, text: "어떤 결정을 할 때 내가 낸 의견이 선택되었으면 한다.", cat: "C" },
+            { id: 32, text: "새로운 것을 배우는 것이 즐겁다.", cat: "E" },
+            { id: 33, text: "혼자만의 시간이 꼭 필요하다.", cat: "D" },
+            { id: 34, text: "가깝고 친밀한 관계를 추구한다.", cat: "B" },
+            { id: 35, text: "안정된 미래를 위해 저축하거나 투자를 한다.", cat: "A" },
+            { id: 36, text: "내게 무리한 부탁을 할 때 거절할 수 있다.", cat: "C" },
+            { id: 37, text: "친한 사람이어도 연락을 자주 하지 않는다.", cat: "D" },
+            { id: 38, text: "좋은 것이 있으면 나누어 주고 싶어 한다.", cat: "B" },
+            { id: 39, text: "영화나 음악감상을 좋아한다.", cat: "E" },
+            { id: 40, text: "내 분야에서 탁월한 사람이 되고 싶다.", cat: "C" },
+            { id: 41, text: "한 가지를 오래 혹은 끝까지 하는 것이 어렵다.", cat: "D" },
+            { id: 42, text: "모험은 될 수 있는 한 피하고 싶다.", cat: "A" },
+            { id: 43, text: "계획과 다르게 진행되어도 불편하지 않다.", cat: "D" },
+            { id: 44, text: "사랑하는 사이에는 비밀이 없어야 한다고 생각한다.", cat: "B" },
+            { id: 45, text: "잘못된 일에 대해 내 생각을 표현한다.", cat: "C" },
+            { id: 46, text: "쓸 수 있는 물건은 버리지 않고 보관한다.", cat: "A" },
+            { id: 47, text: "나의 성취와 능력이 자랑스럽다.", cat: "C" },
+            { id: 48, text: "힘든 사람을 보면 도와주고 싶다.", cat: "B" },
+            { id: 49, text: "호기심이 많다.", cat: "E" },
+            { id: 50, text: "꼬치꼬치 묻는 것이 부담스럽다.", cat: "D" },
+            { id: 51, text: "계획한 대로 진행되어야 마음이 편안하다.", cat: "A" },
+            { id: 52, text: "대화하고 소통하는 것을 즐긴다.", cat: "B" },
+            { id: 53, text: "회의나 만남에서 이야기를 이끌어간다.", cat: "C" },
+            { id: 54, text: "주어진 매뉴얼보다 나만의 방식으로 일 처리를 하는 것을 좋아한다.", cat: "D" },
+            { id: 55, text: "주말이나 쉬는 날에는 여행 등의 일정(스케줄)이 있다.", cat: "E" },
+            { id: 56, text: "노는 게 제일 좋아서 피곤할 때까지 놀다.", cat: "E" },
+            { id: 57, text: "누군가 실수하면 그럴 수 있다고 생각하기에 너그럽게 대한다.", cat: "D" },
+            { id: 58, text: "상사(윗사람)와도 의견이 맞지 않으면 맞서서 이야기한다.", cat: "C" },
+            { id: 59, text: "모든 사람과 잘 지내고 싶어서 반응을 살핀다.", cat: "B" },
+            { id: 60, text: "혹시 모를 상황을 대비해 대비책을 세운다.", cat: "A" },
+            { id: 61, text: "다른 사람의 개성을 존중한다.", cat: "D" },
+            { id: 62, text: "부탁을 거절하기가 어렵다.", cat: "B" },
+            { id: 63, text: "새로운 일을 하기 전에 확인하고, 점검한다.", cat: "A" },
+            { id: 64, text: "이야기를 하다 보면 주로 일 이야기를 많이 한다.", cat: "C" },
+            { id: 65, text: "속상한 일도 좋은 면으로 생각한다.", cat: "E" },
+            { id: 66, text: "소외된 사람에게 먼저 말을 건다.", cat: "B" },
+            { id: 67, text: "새로운 것을 배우러 다닌다.", cat: "E" },
+            { id: 68, text: "누구에게든 할 말은 한다.", cat: "C" },
+            { id: 69, text: "왜 해야 하는지 근원적인 질문을 한다.", cat: "D" },
+            { id: 70, text: "나서서 해야 할 일이 생기면 미리 시나리오를 짜서 연습한다.", cat: "A" },
+            { id: 71, text: "같은 일을 오래 하면 지겨움을 느낀다.", cat: "D" },
+            { id: 72, text: "내 일을 미루고라도 남의 일을 도와준다.", cat: "B" },
+            { id: 73, text: "이야기를 듣다 보면 해결책을 먼저 제시하게 된다.", cat: "C" },
+            { id: 74, text: "준비물은 미리미리 챙긴다.", cat: "A" },
+            { id: 75, text: "가르치는 것을 즐긴다.", cat: "E" },
+            { id: 76, text: "기념일을 잘 챙긴다.", cat: "B" },
+            { id: 77, text: "위험한 일에 도전한다.", cat: "E" },
+            { id: 78, text: "자기가 이해가 되지 않는 지시는 잘 따르지 않는다.", cat: "D" },
+            { id: 79, text: "고민을 상담해줄 때 아닌 건 아니라고 말한다.", cat: "C" },
+            { id: 80, text: "물건을 살 때 가격을 비교하며 최저가로 산다.", cat: "A" },
+            { id: 81, text: "공간이 항상 깔끔한 상태로 유지되길 원한다.", cat: "A" },
+            { id: 82, text: "서운함을 잘 느낀다.", cat: "B" },
+            { id: 83, text: "공개적으로 인정받고 칭찬받는 것을 좋아한다.", cat: "C" },
+            { id: 84, text: "스킨십이 부담스럽다.", cat: "D" },
+            { id: 85, text: "가능하면 긍정적이고 밝은 이야기를 하려고 한다.", cat: "E" },
+            { id: 86, text: "감동을 잘 받으며 다른 사람에게도 감동을 주고 싶다.", cat: "B" },
+            { id: 87, text: "신중하게 생각하다 보니 물건을 많이 사지 않는다.", cat: "A" },
+            { id: 88, text: "새로운 물건이 보이면 사고 싶다.", cat: "E" },
+            { id: 89, text: "결과물을 잘 만들어낸다.", cat: "C" },
+            { id: 90, text: "함께 일하는 것보다 혼자 일하는 것을 선호한다.", cat: "D" },
+            { id: 91, text: "기존에 하던 것과 다르게 하고 싶다.", cat: "D" },
+            { id: 92, text: "친목모임을 잘 만든다.", cat: "B" },
+            { id: 93, text: "규칙이나 시간을 잘 지키지 않는 사람에게 스트레스를 많이 받는다.", cat: "A" },
+            { id: 94, text: "다른 사람 눈치를 잘 보지 않는다.", cat: "C" },
+            { id: 95, text: "실수에도 스스로를 잘 격려한다.", cat: "E" },
+            { id: 96, text: "대화나 모임에 끼지 못하는 사람에게 신경이 쓰인다.", cat: "B" },
+            { id: 97, text: "다른 사람에게 말이나 행동으로 장난치는 것이 재미있다.", cat: "E" },
+            { id: 98, text: "내가 잘하면 된다고 생각한다.", cat: "C" },
+            { id: 99, text: "일상적이거나 평범한 것에서 벗어나고 싶다.", cat: "D" },
+            { id: 100, text: "말을 할 때 생각이 정리된 후 표현한다.", cat: "A" }
+        ];
+
+        // Need Meta Information
+        const categoryMeta = {
+            A: {
+                name: "생존과 안정",
+                english: "Survival",
+                icon: "fa-house",
+                color: "red",
+                bgClass: "bg-red-500",
+                textClass: "text-red-600",
+                borderClass: "border-red-200",
+                lightBg: "bg-red-50",
+                relation: {
+                    traits: [
+                        "조용하며 쉽게 자기 표현을 하지 않음.",
+                        "말하는데 조심스러움.",
+                        "다른 사람과의 경계선이 높은 편임. 그래서 친해지는데 시간이 좀 걸림.",
+                        "규칙과 상식이 지켜지지 않으면 불편함."
+                    ],
+                    tips: [
+                        "웃으면서 말하기.",
+                        "감사연습하기.",
+                        "과도한 걱정인지 점검하기.",
+                        "자신과 다른 사람의 장점 찾기."
+                    ]
+                },
+                work: {
+                    traits: [
+                        "결정하는데 신중함, 실수하지 않음.",
+                        "새로운 일은 적응하는데 시간이 걸림.",
+                        "확인하는 질문을 자주 함.",
+                        "철저한 계획으로 확실하게 일을 처리함."
+                    ],
+                    tips: [
+                        "규칙과 잔소리가 많을 수 있으므로 점검해보기.",
+                        "나와 다른 업무 스타일의 장점 기억하기.",
+                        "업무에 지나치게 몰두할 수 있으므로 자기 돌봄이 필요함."
+                    ]
+                }
+            },
+            B: {
+                name: "사랑과 소속",
+                english: "Belonging",
+                icon: "fa-heart",
+                color: "rose",
+                bgClass: "bg-rose-500",
+                textClass: "text-rose-600",
+                borderClass: "border-rose-200",
+                lightBg: "bg-rose-50",
+                relation: {
+                    traits: [
+                        "잘 도와주고, 배려하고, 양보함.",
+                        "친밀하면 모든 것을 공유하기 원함.",
+                        "다른 사람의 눈치를 보고 상처를 잘 받음.",
+                        "서운함을 잘 느끼는데 이를 표현하기 어려워 함.",
+                        "감정기복이 있을 수 있음."
+                    ],
+                    tips: [
+                        "거절하는 연습하기.",
+                        "불편함에 대한 표현하기.",
+                        "자기 주장하기."
+                    ]
+                },
+                work: {
+                    traits: [
+                        "관계가 좋아야 일도 잘하는 스타일임.",
+                        "일 이야기를 해도 관계 이야기를 하게 됨.",
+                        "다른 사람에게 일을 잘 시키지 못하고, 상대방의 실수에 대하여 이야기를 잘하지 못함.",
+                        "업무 처리가 깔끔하지 못할 수 있음.",
+                        "다른 사람이 힘들어하는 일을 대신 떠맡는 경우가 많음."
+                    ],
+                    tips: [
+                        "일에서 경계선을 긋는 연습하기.",
+                        "일과 관계 구분하는 연습하기.",
+                        "일을 부탁하는 연습하기."
+                    ]
+                }
+            },
+            C: {
+                name: "힘의 욕구",
+                english: "Power",
+                icon: "fa-hand-fist",
+                color: "amber",
+                bgClass: "bg-amber-500",
+                textClass: "text-amber-600",
+                borderClass: "border-amber-200",
+                lightBg: "bg-amber-50",
+                relation: {
+                    traits: [
+                        "상대가 누구든 자기가 하고 싶은 말은 이야기할 수 있음.",
+                        "다른 사람들의 눈치를 잘 보지 않음.",
+                        "솔직한 자기 표현과 허심탄회한 관계를 만들어 갈 수 있음.",
+                        "자기와 생각이 다른 경우, 자기의 불편함을 표현하고 이를 바꾸려고 함.",
+                        "상대방의 고민에 대하여 공감보다는 논리적인 해결책을 제시하려고 함."
+                    ],
+                    tips: [
+                        "해결책을 제시하기보다 공감해보기.",
+                        "소리를 낮추어 부드럽게 말하는 연습하기.",
+                        "잘못했을 때는 미안하다고 말하기."
+                    ]
+                },
+                work: {
+                    traits: [
+                        "목표를 성취하고, 자기가 원하는 것을 이루어 냄.",
+                        "승부욕이 강해서 꼭 이기려고 함.",
+                        "자기가 한 말이 관철되기를 바람.",
+                        "다른 사람에게 일을 지시하거나 부탁하는 것이 그리 어렵지 않음.",
+                        "일에 몰두하면 상대방에 대한 세심한 배려를 잘하지 못함."
+                    ],
+                    tips: [
+                        "상대방의 의견도 물어보기, 공감하기.",
+                        "강요와 명령보다 모범으로 이끌기.",
+                        "실적과 팀워크의 균형잡기.",
+                        "타협하고 협력하기."
+                    ]
+                }
+            },
+            D: {
+                name: "자유의 욕구",
+                english: "Freedom",
+                icon: "fa-paper-plane",
+                color: "sky",
+                bgClass: "bg-sky-500",
+                textClass: "text-sky-600",
+                borderClass: "border-sky-200",
+                lightBg: "bg-sky-50",
+                relation: {
+                    traits: [
+                        "대인관계에서 적절한 거리가 필요함.",
+                        "상대방의 어떤 생각이든 잘 인정하고 존중함.",
+                        "가능하면 갈등없이 평화로운 상태를 추구함.",
+                        "혼자 있는 시간이 꼭 필요함.",
+                        "조직이나 사람에게 매이는 관계를 부담스러워함."
+                    ],
+                    tips: [
+                        "'혼자'와 '함께'의 균형을 잡기.",
+                        "먼저 연락하기.",
+                        "약속은 꼭 지키기.",
+                        "자기 감정을 표현하기."
+                    ]
+                },
+                work: {
+                    traits: [
+                        "창의력이 높고, 자율성이 큰 일을 즐김.",
+                        "자기가 좋아하는 일은 몰입하지만 자기가 싫어하는 일은 하지 않거나 대충하는 경향이 있음.",
+                        "다른 사람들에게 권한을 잘 위임함.",
+                        "주어진 매뉴얼보다 자신만의 방식으로 처리함.",
+                        "정해진 규칙과 일정을 답답하게 여김.",
+                        "한 가지 일을 오래 하는 것이 어려움."
+                    ],
+                    tips: [
+                        "함께 정한 규칙은 지키기.",
+                        "하기 싫어질 때 조금만 더 해보기.",
+                        "혼자만의 시간을 따로 정해 놓기."
+                    ]
+                }
+            },
+            E: {
+                name: "즐거움의 욕구",
+                english: "Fun",
+                icon: "fa-face-smile",
+                color: "emerald",
+                bgClass: "bg-emerald-500",
+                textClass: "text-emerald-600",
+                borderClass: "border-emerald-200",
+                lightBg: "bg-emerald-50",
+                relation: {
+                    traits: [
+                        "잘 웃으며 쉽게 즐거운 분위기를 만들음.",
+                        "리액션과 목소리가 큰 편임.",
+                        "맛집을 찾아 다니며, 먹는 것을 좋아함.",
+                        "긍정적으로 말함.",
+                        "관심사가 많아서 다양한 배움과 활동으로 바쁘게 지냄."
+                    ],
+                    tips: [
+                        "부정적인 감정에 공감 연습하기.",
+                        "사람들이 짓궂은 장난을 싫어하면 멈추기.",
+                        "일과 배움과 건강의 균형잡기."
+                    ]
+                },
+                work: {
+                    traits: [
+                        "업무 분위기를 밝게 만들음.",
+                        "놀이가 결합된 일을 즐김.",
+                        "무엇이든 긍정적으로 말함.",
+                        "바빠도 노는 것과 먹는 것을 잘 챙김."
+                    ],
+                    tips: [
+                        "일의 장단점을 꼼꼼하게 따져보기.",
+                        "새로운 일을 시작하기 전 계획과 점검하기.",
+                        "때로는 진지한 분위기도 견뎌 보기."
+                    ]
+                }
+            }
+        };
+
+        let gasWebUrl = localStorage.getItem('gasWebUrl') || '';
+
+        window.onload = function() {
+            const gasInput = document.getElementById('gasUrlInput');
+            if (gasInput && gasWebUrl) {
+                gasInput.value = gasWebUrl;
+            }
+        };
+
+        function openApiModal() {
+            const gasInput = document.getElementById('gasUrlInput');
+            if (gasInput) gasInput.value = gasWebUrl;
+            const apiModal = document.getElementById('apiModal');
+            if (apiModal) apiModal.classList.remove('hidden');
+        }
+
+        function closeApiModal() {
+            const apiModal = document.getElementById('apiModal');
+            if (apiModal) apiModal.classList.add('hidden');
+        }
+
+        function copyGasCode() {
+            const codeEl = document.getElementById('gasCodeTemplate');
+            if (!codeEl) return;
+            const codeText = codeEl.innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('구글 앱스 스크립트 코드가 클립보드에 복사되었습니다!');
+        }
+
+        function saveGasUrl() {
+            const gasInput = document.getElementById('gasUrlInput');
+            if (!gasInput) return;
+            let url = gasInput.value.trim();
+            if (url.includes('/edit')) {
+                url = url.replace(/\/edit.*$/, '/exec');
+            }
+            gasWebUrl = url;
+            localStorage.setItem('gasWebUrl', url);
+            closeApiModal();
+            alert('구글 드라이브 연동 주소가 저장되었습니다!');
+        }
+
+        // Start Assessment
+        function startTest(e) {
+            e.preventDefault();
+            const name = document.getElementById('userName').value.trim();
+            if (!name) {
+                alert('이름을 입력해 주세요.');
+                return;
+            }
+
+            userInfo.name = name;
+            userInfo.gender = document.getElementById('userGender').value;
+            userInfo.age = document.getElementById('userAge').value || '-';
+
+            // Show Test Screen
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('testScreen').classList.remove('hidden');
+            document.getElementById('headerProgress').classList.remove('hidden');
+            document.getElementById('headerProgress').classList.add('flex');
+
+            currentPage = 0;
+            renderPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            const startIndex = currentPage * PAGE_SIZE;
+            const endIndex = Math.min(startIndex + PAGE_SIZE, questionsData.length);
+            const currentQuestions = questionsData.slice(startIndex, endIndex);
+
+            currentQuestions.forEach((q, index) => {
+                const qNum = startIndex + index + 1;
+                const selectedVal = userAnswers[q.id] || 0;
+
+                const card = document.createElement('div');
+                card.className = `bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-slate-200 transition-all ${selectedVal ? 'border-indigo-200 bg-indigo-50/20' : ''}`;
+                card.id = `qCard_${q.id}`;
+
+                card.innerHTML = `
+                    <div class="flex items-start space-x-3 mb-4">
+                        <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                            ${qNum}
+                        </span>
+                        <p class="text-sm md:text-base font-semibold text-slate-800 leading-snug">
+                            ${q.text}
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
+                        ${[5, 4, 3, 2, 1].map(score => {
+                            const labels = { 5: '항상 그렇다', 4: '자주 그렇다', 3: '때때로 그렇다', 2: '별로 그렇지 않다', 1: '전혀 그렇지 않다' };
+                            const shortLabels = { 5: '항상', 4: '자주', 3: '때때로', 2: '별로', 1: '전혀' };
+                            const isChecked = selectedVal === score;
+                            return `
+                                <button type="button" 
+                                    onclick="selectAnswer(${q.id}, ${score})"
+                                    data-score="${score}"
+                                    class="score-btn-${q.id} py-2.5 px-1 rounded-xl border text-xs font-medium transition-all flex flex-col items-center justify-center space-y-0.5 min-h-[44px] active:scale-95 ${
+                                        isChecked 
+                                        ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm scale-[1.02]' 
+                                        : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700'
+                                    }">
+                                    <span class="font-bold text-sm md:text-base pointer-events-none">${score}점</span>
+                                    <span class="text-[10px] opacity-80 hidden sm:inline pointer-events-none">${labels[score]}</span>
+                                    <span class="text-[10px] opacity-80 sm:hidden pointer-events-none">${shortLabels[score]}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            updateProgress();
+            
+            document.getElementById('prevBtn').disabled = currentPage === 0;
+            document.getElementById('nextBtn').innerHTML = currentPage === 9 ? '<span>결과 보기</span> <i class="fa-solid fa-check ml-1"></i>' : '<span>다음</span> <i class="fa-solid fa-chevron-right text-xs ml-1"></i>';
+            document.getElementById('currentPageText').innerText = currentPage + 1;
+            document.getElementById('pageIndicator').innerText = `${startIndex + 1} - ${endIndex} / 100`;
+        }
+
+        function selectAnswer(qId, score) {
+            userAnswers[qId] = score;
+            
+            const card = document.getElementById(`qCard_${qId}`);
+            if (card) {
+                card.classList.add('border-indigo-200', 'bg-indigo-50/20');
+                const buttons = card.querySelectorAll(`.score-btn-${qId}`);
+                buttons.forEach(btn => {
+                    const btnScore = parseInt(btn.getAttribute('data-score'), 10);
+                    if (btnScore === score) {
+                        btn.className = `score-btn-${qId} py-2.5 px-1 rounded-xl border text-xs font-medium transition-all flex flex-col items-center justify-center space-y-0.5 min-h-[44px] active:scale-95 bg-indigo-600 border-indigo-600 text-white shadow-sm scale-[1.02]`;
+                    } else {
+                        btn.className = `score-btn-${qId} py-2.5 px-1 rounded-xl border text-xs font-medium transition-all flex flex-col items-center justify-center space-y-0.5 min-h-[44px] active:scale-95 bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700`;
+                    }
+                });
+            }
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const percent = Math.round((answeredCount / 100) * 100);
+
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('headerProgressText').innerText = `${answeredCount} / 100`;
+        }
+
+        function changePage(direction) {
+            if (direction > 0) {
+                const startIndex = currentPage * PAGE_SIZE;
+                const endIndex = Math.min(startIndex + PAGE_SIZE, questionsData.length);
+                const currentQuestions = questionsData.slice(startIndex, endIndex);
+
+                const uncompleted = currentQuestions.filter(q => !userAnswers[q.id]);
+                if (uncompleted.length > 0) {
+                    const firstUnanswered = uncompleted[0];
+                    const card = document.getElementById(`qCard_${firstUnanswered.id}`);
+                    if (card) {
+                        const yOffset = -90; 
+                        const y = card.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                        card.classList.add('ring-2', 'ring-red-400');
+                        setTimeout(() => card.classList.remove('ring-2', 'ring-red-400'), 2000);
+                    }
+                    return;
+                }
+            }
+
+            if (currentPage + direction >= 10) {
+                calculateAndShowResult();
+                return;
+            }
+
+            currentPage += direction;
+            renderPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function calculateAndShowResult() {
+            const totalAnswered = Object.keys(userAnswers).length;
+            if (totalAnswered < 100) {
+                alert('아직 응답하지 않은 문항이 있습니다. 100문항을 모두 완성해 주세요.');
+                return;
+            }
+
+            const scores = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+            questionsData.forEach(q => {
+                const ans = userAnswers[q.id] || 0;
+                scores[q.cat] += ans;
+            });
+
+            const scoreArr = Object.keys(scores).map(cat => ({
+                cat: cat,
+                score: scores[cat],
+                name: categoryMeta[cat].name,
+                meta: categoryMeta[cat]
+            }));
+
+            scoreArr.sort((a, b) => b.score - a.score);
+
+            scoreArr.forEach((item, idx) => {
+                item.rank = idx + 1;
+            });
+
+            document.getElementById('resUserName').innerText = userInfo.name;
+            document.getElementById('resDate').innerText = new Date().toISOString().split('T')[0];
+            document.getElementById('resGender').innerText = userInfo.gender;
+            document.getElementById('resAge').innerText = userInfo.age;
+
+            renderScoreCards(scores, scoreArr);
+            renderCharts(scores);
+            renderDetailedAnalysis(scoreArr);
+
+            document.getElementById('testScreen').classList.add('hidden');
+            document.getElementById('headerProgress').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function getScoreLevel(score) {
+            if (score >= 81) return { text: "아주 높음", badge: "bg-red-100 text-red-700 border-red-200" };
+            if (score >= 71) return { text: "높음", badge: "bg-amber-100 text-amber-700 border-amber-200" };
+            if (score >= 61) return { text: "중간", badge: "bg-emerald-100 text-emerald-700 border-emerald-200" };
+            if (score >= 51) return { text: "낮음", badge: "bg-sky-100 text-sky-700 border-sky-200" };
+            return { text: "아주 낮음", badge: "bg-slate-100 text-slate-700 border-slate-200" };
+        }
+
+        function renderScoreCards(scores, scoreArr) {
+            const container = document.getElementById('scoreSummaryCards');
+            container.innerHTML = '';
+
+            const categoryOrder = ['A', 'B', 'C', 'D', 'E'];
+
+            categoryOrder.forEach(cat => {
+                const meta = categoryMeta[cat];
+                const score = scores[cat];
+                const rankObj = scoreArr.find(item => item.cat === cat);
+                const level = getScoreLevel(score);
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border ${meta.borderClass} ${meta.lightBg} flex flex-col justify-between text-center`;
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${meta.bgClass} text-white">${cat}</span>
+                            <span class="text-[10px] font-bold text-slate-500">${rankObj.rank}위</span>
+                        </div>
+                        <div class="w-8 h-8 mx-auto rounded-full bg-white flex items-center justify-center my-1 ${meta.textClass} shadow-xs">
+                            <i class="fa-solid ${meta.icon}"></i>
+                        </div>
+                        <div class="text-xs font-bold text-slate-800">${meta.name}</div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="text-2xl font-extrabold ${meta.textClass}">${score}<span class="text-xs font-normal text-slate-500 ml-0.5">점</span></div>
+                        <span class="mt-1 inline-block text-[10px] font-bold px-2 py-0.5 rounded-full border ${level.badge}">
+                            ${level.text}
+                        </span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            const topType = scoreArr[0];
+            document.getElementById('dominantTypeName').innerText = topType.name;
+            
+            let domDesc = `귀하의 가장 주된 욕구는 <strong>'${topType.name}' (${topType.score}점)</strong> 입니다. `;
+            if (topType.cat === 'A') {
+                domDesc += "안정과 규칙, 예측 가능성을 중요하게 생각하며, 체계적인 관리와 준비성을 바탕으로 깊은 신뢰감을 주는 성향입니다.";
+            } else if (topType.cat === 'B') {
+                domDesc += "사람들과의 관계, 교감, 따뜻한 소속감을 최우선으로 생각하며, 배려심이 높고 함께하는 분위기를 주도하는 성향입니다.";
+            } else if (topType.cat === 'C') {
+                domDesc += "성취, 존중, 주도권을 중시하며, 탁월한 유능함과 결단력으로 목표를 완수하고 영향력을 발휘하는 성향입니다.";
+            } else if (topType.cat === 'D') {
+                domDesc += "자율성, 자신만의 방식, 독립적인 시각을 존중하며, 구속받지 않는 자유로운 환경에서 창의력을 발휘하는 성향입니다.";
+            } else if (topType.cat === 'E') {
+                domDesc += "즐거움, 배움, 새로운 경험과 호기심을 추구하며, 주변 분위기를 밝게 만들고 삶의 재미를 찾아나가는 성향입니다.";
+            }
+
+            if (scoreArr[0].score - scoreArr[1].score <= 5) {
+                domDesc += `<br><br>또한 2위인 <strong>'${scoreArr[1].name}' (${scoreArr[1].score}점)</strong> 역시 높은 강도로 나타나 두 욕구가 상호작용하는 복합적인 특성을 보여줍니다.`;
+            }
+
+            document.getElementById('dominantTypeDesc').innerHTML = domDesc;
+        }
+
+        function renderCharts(scores) {
+            const labels = ['생존과 안정', '사랑과 소속', '힘의 욕구', '자유의 욕구', '즐거움의 욕구'];
+            const dataValues = [scores.A, scores.B, scores.C, scores.D, scores.E];
+            const colors = [
+                'rgba(239, 68, 68, 0.85)',   
+                'rgba(244, 63, 94, 0.85)',   
+                'rgba(245, 158, 11, 0.85)',  
+                'rgba(14, 165, 233, 0.85)',  
+                'rgba(16, 185, 129, 0.85)'   
+            ];
+
+            if (barChartInstance) barChartInstance.destroy();
+            if (radarChartInstance) radarChartInstance.destroy();
+
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            barChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '점수 (20점 ~ 100점)',
+                        data: dataValues,
+                        backgroundColor: colors,
+                        borderRadius: 8,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    animation: false,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { min: 20, max: 100, ticks: { stepSize: 20 } }
+                    }
+                }
+            });
+
+            const ctxRadar = document.getElementById('radarChart').getContext('2d');
+            radarChartInstance = new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '욕구 강도 프로필',
+                        data: dataValues,
+                        backgroundColor: 'rgba(99, 102, 241, 0.25)',
+                        borderColor: 'rgba(99, 102, 241, 0.9)',
+                        pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    animation: false,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        r: {
+                            min: 20,
+                            max: 100,
+                            ticks: { display: false },
+                            angleLines: { color: 'rgba(226, 232, 240, 0.8)' },
+                            grid: { color: 'rgba(226, 232, 240, 0.8)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderDetailedAnalysis(scoreArr) {
+            const container = document.getElementById('detailedAnalysisContainer');
+            container.innerHTML = '';
+
+            scoreArr.forEach(item => {
+                const meta = item.meta;
+                const level = getScoreLevel(item.score);
+
+                const card = document.createElement('div');
+                card.className = `rounded-2xl border ${meta.borderClass} bg-white overflow-hidden shadow-xs`;
+
+                card.innerHTML = `
+                    <div class="${meta.lightBg} p-4 border-b ${meta.borderClass} flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl ${meta.bgClass} text-white flex items-center justify-center font-bold text-lg shadow-xs">
+                                <i class="fa-solid ${meta.icon}"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-base">${meta.name} <span class="text-xs font-normal text-slate-500">(${meta.english})</span></h4>
+                                <p class="text-xs font-medium ${meta.textClass}">순위: ${item.rank}위 | 점수: ${item.score}점 (${level.text})</p>
+                            </div>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold ${level.badge}">
+                            ${item.score}점
+                        </span>
+                    </div>
+
+                    <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                        <div class="space-y-3">
+                            <div class="font-bold text-slate-800 text-sm flex items-center border-b border-slate-100 pb-2">
+                                <i class="fa-solid fa-users text-indigo-500 mr-2"></i>관계성과 성장방향
+                            </div>
+                            <div>
+                                <span class="font-semibold text-slate-700 block mb-1 text-[11px]"><i class="fa-solid fa-check text-slate-400 mr-1"></i>주요 행동 및 성향</span>
+                                <ul class="list-disc list-inside text-slate-600 space-y-1 pl-1">
+                                    ${meta.relation.traits.map(t => `<li>${t}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100/60">
+                                <span class="font-bold text-indigo-900 block mb-1 text-[11px]"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i>성장 방향 Tip (추천 노력)</span>
+                                <ul class="list-disc list-inside text-indigo-950 space-y-1 pl-1 font-medium">
+                                    ${meta.relation.tips.map(t => `<li>${t}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="font-bold text-slate-800 text-sm flex items-center border-b border-slate-100 pb-2">
+                                <i class="fa-solid fa-briefcase text-indigo-500 mr-2"></i>업무 스타일과 성장방향
+                            </div>
+                            <div>
+                                <span class="font-semibold text-slate-700 block mb-1 text-[11px]"><i class="fa-solid fa-check text-slate-400 mr-1"></i>업무 특성</span>
+                                <ul class="list-disc list-inside text-slate-600 space-y-1 pl-1">
+                                    ${meta.work.traits.map(t => `<li>${t}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100/60">
+                                <span class="font-bold text-indigo-900 block mb-1 text-[11px]"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i>성장 방향 Tip (업무 자기돌봄)</span>
+                                <ul class="list-disc list-inside text-indigo-950 space-y-1 pl-1 font-medium">
+                                    ${meta.work.tips.map(t => `<li>${t}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function restartTest() {
+            if (Object.keys(userAnswers).length > 0) {
+                if (!confirm('검사를 처음부터 다시 시작하시겠습니까? (기존 답변은 초기화됩니다)')) {
+                    return;
+                }
+            }
+            userAnswers = {};
+            currentPage = 0;
+            document.getElementById('userInfoForm').reset();
+            
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('testScreen').classList.add('hidden');
+            document.getElementById('headerProgress').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function downloadAndUploadPDF() {
+            const loadingOverlay = document.getElementById('pdfLoading');
+            const statusText = document.getElementById('loadingStatusText');
+            const subText = document.getElementById('loadingSubText');
+
+            loadingOverlay.classList.remove('hidden');
+            statusText.innerText = "PDF 결과지를 생성 중입니다...";
+            subText.innerText = "잠시만 기다려 주세요.";
+
+            // 화면 스크롤을 최상단으로 이동하여 html2canvas 스크롤 오프셋으로 인한 빈 페이지 방지
+            window.scrollTo(0, 0);
+
+            // UI 및 차트 렌더링 안정화를 위한 짧은 대기
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            const fileName = `${userInfo.name || '사용자'}_기본욕구강도_검사결과.pdf`;
+            const element = document.getElementById('resultScreen');
+
+            // Mobile view canvas memory optimization
+            const isMobile = window.innerWidth < 768;
+            const pdfScale = isMobile ? 1.5 : 2;
+
+            const opt = {
+                margin:       [10, 10, 10, 10],
+                filename:     fileName,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: pdfScale, 
+                    useCORS: true, 
+                    logging: false,
+                    scrollY: 0,
+                    scrollX: 0,
+                    windowWidth: document.documentElement.offsetWidth || 1200
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            try {
+                // Generate & Save PDF locally
+                await html2pdf().set(opt).from(element).save();
+                
+                loadingOverlay.classList.add('hidden');
+
+                // Update Modal Content & Show Drive Link
+                document.getElementById('modalFileName').innerText = fileName;
+                document.getElementById('driveFileLink').href = TARGET_DRIVE_FOLDER_URL;
+                document.getElementById('driveModal').classList.remove('hidden');
+
+            } catch (pdfErr) {
+                loadingOverlay.classList.add('hidden');
+                console.error("PDF generation error:", pdfErr);
+                alert("PDF 생성 중 오류가 발생했습니다.");
+            }
+        }
+
+        function closeDriveModal() {
+            document.getElementById('driveModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
